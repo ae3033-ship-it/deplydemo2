@@ -1,0 +1,12 @@
+.git
+.gitignore
+venv
+__pycache__
+*.pyc
+.env
+database
+class_dataset.csv
+schema.sql
+deploy_db.py
+models.py
+README.md

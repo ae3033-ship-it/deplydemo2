@@ -1,14 +1,20 @@
+import os
 from pathlib import Path
-import csv
 
-DATABASE_DIR = Path(__file__).parent / "database"
+from dotenv import load_dotenv
+import psycopg2
 
-
-def _read_table(name):
-    path = DATABASE_DIR / f"{name}.csv"
-    with path.open(newline="", encoding="utf-8") as file:
-        return list(csv.DictReader(file))
+load_dotenv(Path(__file__).parent / ".env")
 
 
-def get_students():
-    return _read_table("student")
+def get_student_names():
+    url = os.environ["DATABASE_URL"]
+    if "sslmode=" not in url:
+        url += ("&" if "?" in url else "?") + "sslmode=require"
+    conn = psycopg2.connect(url)
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT name FROM student ORDER BY id")
+            return [row[0] for row in cur.fetchall()]
+    finally:
+        conn.close()
