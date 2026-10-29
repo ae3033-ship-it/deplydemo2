@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Students</title>
+</head>
+<body>
+    <h1>Class competency averages</h1>
+    <ul id="averages"></ul>
+    <h1>Students</h1>
+    <ul id="students"></ul>
+    <script>
+        fetch("/api/competency-averages")
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                var list = document.getElementById("averages");
+                data.competencies.forEach(function (item) {
+                    var row = document.createElement("li");
+                    row.textContent = item.label + ": " + item.average;
+                    list.appendChild(row);
+                });
+            });
+
+        fetch("/api/students")
+            .then(function (response) { return response.json(); })
+            .then(function (names) {
+                var list = document.getElementById("students");
+                names.forEach(function (name) {
+                    var item = document.createElement("li");
+                    item.textContent = name;
+                    list.appendChild(item);
+                });
+            });
+    </script>
+</body>
+</html>
